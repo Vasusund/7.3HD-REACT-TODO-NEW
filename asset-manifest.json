@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/7.3HD-REACT-TODO-NEW/static/css/main.3982bb5f.css",
+    "main.js": "/7.3HD-REACT-TODO-NEW/static/js/main.a58c92a2.js",
+    "index.html": "/7.3HD-REACT-TODO-NEW/index.html",
+    "main.3982bb5f.css.map": "/7.3HD-REACT-TODO-NEW/static/css/main.3982bb5f.css.map",
+    "main.a58c92a2.js.map": "/7.3HD-REACT-TODO-NEW/static/js/main.a58c92a2.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3982bb5f.css",
+    "static/js/main.a58c92a2.js"
+  ]
+}
