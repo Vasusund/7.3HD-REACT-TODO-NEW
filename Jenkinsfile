@@ -14,7 +14,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Checking out code from GitHub...'
-                git branch: 'main', url: 'https://github.com/Vasusund/7.3H-SIT223.git'
+                git branch: 'main', url: 'https://github.com/Vasusund/7.3HD-REACT-TODO-NEW.git'
             }
         }
 
