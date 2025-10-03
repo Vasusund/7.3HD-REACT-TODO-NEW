@@ -7,7 +7,7 @@ pipeline {
 
     environment {
         PATH = "${tool('NodeJS 18')}/bin:${env.PATH}"
-        SNYK_TOKEN = credentials('2c71a9e0-7429-4d63-8867-0bdf50fd00a6') 
+        SNYK_TOKEN = credentials('snyk-token')
     }
 
     stages {
@@ -46,16 +46,16 @@ pipeline {
         }
 
         stage('Security') {
-            steps {
-                echo 'Running npm audit for security vulnerabilities...'
-                sh 'npm audit --audit-level=moderate || true'
+    steps {
+        echo 'Running npm audit for security vulnerabilities...'
+        sh 'npm audit --audit-level=moderate || true'
 
-                echo 'Running Snyk security scan...'
-                sh 'npm install -g snyk'
-                sh 'snyk auth $SNYK_TOKEN'
-                sh 'snyk test --severity-threshold=medium || true'
-            }
-        }
+        echo 'Running Snyk security scan...'
+        sh 'npm install -g snyk'
+        sh 'snyk test --severity-threshold=medium || true'
+    }
+}
+
 
         stage('Deploy') {
             steps {
