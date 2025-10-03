@@ -61,7 +61,14 @@ pipeline {
             steps {
                 echo 'Deploying React app to Netlify (Test Environment)...'
                 sh 'npm install -g netlify-cli'
-                sh "netlify deploy --dir=build --prod=false --site=3b4a1073-470a-4122-b5f8-b861050171f3 --auth=$NETLIFY_TOKEN"
+               sh '''
+    netlify deploy \
+    --dir=build \
+    --draft \
+    --site=3b4a1073-470a-4122-b5f8-b861050171f3 \
+    --auth=$NETLIFY_TOKEN
+'''
+
             }
         }
 
