@@ -7,6 +7,7 @@ pipeline {
 
     environment {
         PATH = "${tool('NodeJS 18')}/bin:${env.PATH}"
+        SNYK_TOKEN = credentials('2c71a9e0-7429-4d63-8867-0bdf50fd00a6') 
     }
 
     stages {
@@ -24,7 +25,7 @@ pipeline {
                 sh 'rm -rf node_modules'
                 sh 'npm ci'
                 sh 'npm install react-router-dom@6.17.0'
-                sh 'npm run build'           // This creates the build artifact in /build
+                sh 'npm run build'           // creates the build artifact in /build
                 archiveArtifacts artifacts: 'build/**', fingerprint: true
             }
         }
@@ -48,7 +49,11 @@ pipeline {
             steps {
                 echo 'Running npm audit for security vulnerabilities...'
                 sh 'npm audit --audit-level=moderate || true'
-                
+
+                echo 'Running Snyk security scan...'
+                sh 'npm install -g snyk'
+                sh 'snyk auth $SNYK_TOKEN'
+                sh 'snyk test --severity-threshold=medium || true'
             }
         }
 
