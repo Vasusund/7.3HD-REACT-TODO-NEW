@@ -8,7 +8,7 @@ pipeline {
     environment {
         PATH = "${tool('NodeJS 18')}/bin:${env.PATH}"
         SNYK_TOKEN = credentials('synk-token')
-        NETLIFY_TOKEN = credentials('netlify-token')
+        NETLIFY_TOKEN = credentials('NETLIFY_TOKEN')
     }
 
     stages {
