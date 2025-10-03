@@ -2,12 +2,12 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'NodeJS 18'   
+        nodejs 'NodeJS 18'
     }
 
     environment {
         PATH = "${tool('NodeJS 18')}/bin:${env.PATH}"
-        SNYK_TOKEN = credentials('snyk-token')
+        SNYK_TOKEN = credentials('synk-token')
     }
 
     stages {
@@ -25,7 +25,7 @@ pipeline {
                 sh 'rm -rf node_modules'
                 sh 'npm ci'
                 sh 'npm install react-router-dom@6.17.0'
-                sh 'npm run build'           // creates the build artifact in /build
+                sh 'npm run build'
                 archiveArtifacts artifacts: 'build/**', fingerprint: true
             }
         }
@@ -33,35 +33,35 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Running tests with Jest...'
-                sh 'npm test -- --watchAll=false'   // Run all tests once
+                sh 'npm test -- --watchAll=false'
             }
         }
 
         stage('Code Quality') {
             steps {
                 echo 'Running ESLint for code quality...'
-                sh 'npm install -g eslint@8.0.0'
-                sh 'eslint src/**/*.js || true'     // Run ESLint 
+                sh 'npm install -D eslint@8.0.0'
+                sh 'npx eslint src/**/*.js || true'
             }
         }
 
         stage('Security') {
-    steps {
-        echo 'Running npm audit for security vulnerabilities...'
-        sh 'npm audit --audit-level=moderate || true'
+            steps {
+                echo 'Running npm audit for security vulnerabilities...'
+                sh 'npm audit --audit-level=moderate || true'
 
-        echo 'Running Snyk security scan...'
-        sh 'npm install -g snyk'
-        sh 'snyk test --severity-threshold=medium || true'
-    }
-}
-
+                echo 'Running Snyk security scan...'
+                // Authenticate with Snyk using the Jenkins secret
+                sh 'npx snyk auth $SNYK_TOKEN'
+                sh 'npx snyk test --severity-threshold=medium || true'
+            }
+        }
 
         stage('Deploy') {
             steps {
                 echo 'Deploying React app to GitHub Pages...'
                 sh 'npm install -g gh-pages'
-                sh 'npm run deploy'  
+                sh 'npm run deploy'
             }
         }
     }
