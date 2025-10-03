@@ -8,6 +8,7 @@ pipeline {
     environment {
         PATH = "${tool('NodeJS 18')}/bin:${env.PATH}"
         SNYK_TOKEN = credentials('synk-token')
+        NETLIFY_TOKEN = credentials('netlify-token')
     }
 
     stages {
@@ -51,34 +52,24 @@ pipeline {
                 sh 'npm audit --audit-level=moderate || true'
 
                 echo 'Running Snyk security scan...'
-                // Authenticate with Snyk using the Jenkins secret
                 sh 'npx snyk auth $SNYK_TOKEN'
                 sh 'npx snyk test --severity-threshold=medium || true'
             }
         }
 
         stage('Deploy to Netlify') {
-    steps {
-        echo 'Deploying React app to Netlify (Test Environment)...'
-        
-        // Install Netlify CLI globally
-        sh 'npm install -g netlify-cli'
+            steps {
+                echo 'Deploying React app to Netlify (Test Environment)...'
+                sh 'npm install -g netlify-cli'
+                sh "netlify deploy --dir=build --prod=false --site=3b4a1073-470a-4122-b5f8-b861050171f3 --auth=$NETLIFY_TOKEN"
+            }
+        }
 
-        // Deploy the build folder using Netlify CLI as a draft (test environment)
-        sh '''
-            netlify deploy \
-            --dir=build \
-            --prod=false \
-            --site=3b4a1073-470a-4122-b5f8-b861050171f3 \
-            --auth=$NETLIFY_TOKEN
-        '''
-    }
-}
-
+    } // <-- Closing stages block
 
     post {
         success {
-            echo 'Pipeline completed successfully! Your app is live on GitHub Pages.'
+            echo 'Pipeline completed successfully!'
         }
         failure {
             echo 'Pipeline failed. Check the logs!'
