@@ -57,14 +57,24 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            steps {
-                echo 'Deploying React app to GitHub Pages...'
-                sh 'npm install -g gh-pages'
-                sh 'npm run deploy'
-            }
-        }
+        stage('Deploy to Netlify') {
+    steps {
+        echo 'Deploying React app to Netlify (Test Environment)...'
+        
+        // Install Netlify CLI globally
+        sh 'npm install -g netlify-cli'
+
+        // Deploy the build folder using Netlify CLI as a draft (test environment)
+        sh '''
+            netlify deploy \
+            --dir=build \
+            --prod=false \
+            --site=3b4a1073-470a-4122-b5f8-b861050171f3 \
+            --auth=$NETLIFY_TOKEN
+        '''
     }
+}
+
 
     post {
         success {
